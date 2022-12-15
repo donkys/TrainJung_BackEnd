@@ -1,6 +1,7 @@
 from typing import List
 import fastapi as _fastapi
 import fastapi.security as _security
+import uvicorn
 
 import sqlalchemy.orm as _orm
 import scraping_railway as railway
