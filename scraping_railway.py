@@ -18,7 +18,7 @@ _data = requests.get(
 
 # Scraping web
 def _setScraping():
-    return bs4.BeautifulSoup(_data.text)
+    return bs4.BeautifulSoup(_data.text, "html.parser")
 
 __soup = _setScraping()
 
