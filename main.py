@@ -8,8 +8,11 @@ import scraping_railway as railway
 import services as _services
 import schemas as _schemas
 
-app = _fastapi.FastAPI()
-
+app = _fastapi.FastAPI(
+    title="Train-Jung",
+    version=0.1,
+    root_path="/"
+  )
 
 @app.post("/api/users")
 async def create_user(
