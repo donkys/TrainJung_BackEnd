@@ -2,6 +2,7 @@ from typing import List
 import fastapi as _fastapi
 import fastapi.security as _security
 import uvicorn
+import logging
 
 import sqlalchemy.orm as _orm
 import scraping_railway as railway
@@ -14,6 +15,8 @@ app = _fastapi.FastAPI(
     version=0.1,
     root_path="/"
   )
+
+
 
 @app.post("/api/users")
 async def create_user(
@@ -70,3 +73,6 @@ async def train(trainID: int):
 @app.get("/Table/{trainID}")
 async def getTableTrainBy(trainID: int):
     return railway._getTableTrainByID(trainID) 
+
+logger = logging.getLogger("uvicorn.error")
+print(logger)
