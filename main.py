@@ -16,8 +16,6 @@ app = _fastapi.FastAPI(
     root_path="/"
   )
 
-_services.create_database()
-
 @app.post("/api/users")
 async def create_user(
     user: _schemas.UserCreate, db: _orm.Session = _fastapi.Depends(_services.get_db)
@@ -50,7 +48,7 @@ async def getMyStation(user: _schemas.User = _fastapi.Depends(_services.get_curr
     return railway._getInfoStation(user.idStation)
 
 @app.post("/updateTime")
-async def updateTime(idStation: int,numberTrain: int, time: str, user: _schemas.User = _fastapi.Depends(_services.get_current_user)):
+async def updateTime(idStation: int, numberTrain: int, time: str = "", user: _schemas.User = _fastapi.Depends(_services.get_current_user)):
     if idStation != user.idStation:
         raise _fastapi.HTTPException(
             status_code=400, detail="not permission")
