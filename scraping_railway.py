@@ -215,7 +215,15 @@ def _pushNotify(idStation: int, numberTrain: int, time: str, topic:str, message:
 
     return {"topic":topic + "[" + str(idStation) + "" + str(numberTrain) + "" + str(time) + "]", "Message":message}
 
+def _home():
+    with open('./Home.json', encoding="utf8") as json_file:
+        data = json.load(json_file)
+        return data
+    return {"id":-1, "err":"can't open file"}
+
+
 # __createTable("StationOUT")
 # _dataInsertOUT()
 # __conn.close()
 
+_home()
