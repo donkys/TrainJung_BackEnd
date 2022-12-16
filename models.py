@@ -11,6 +11,8 @@ class User(_database.Base):
     __tablename__ = "users"
     id = _sql.Column(_sql.Integer, primary_key=True, index=True)
     email = _sql.Column(_sql.String, unique=True, index=True)
+    idStation = _sql.Column(_sql.Integer, unique=True)
+    stationName = _sql.Column(_sql.String, unique=True)
     hashed_password = _sql.Column(_sql.String)
 
     def verify_password(self, password: str):

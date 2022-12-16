@@ -5,6 +5,8 @@ import pydantic as _pydantic
 
 class _UserBase(_pydantic.BaseModel):
     email: str
+    idStation : int
+    stationName : str
 
 
 class UserCreate(_UserBase):

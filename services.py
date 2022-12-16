@@ -30,7 +30,7 @@ async def get_user_by_email(email: str, db: _orm.Session):
 
 async def create_user(user: _schemas.UserCreate, db: _orm.Session):
     user_obj = _models.User(
-        email=user.email, hashed_password=_hash.bcrypt.hash(user.hashed_password)
+        email=user.email,idStation = user.idStation, stationName = user.stationName, hashed_password=_hash.bcrypt.hash(user.hashed_password)
     )
     db.add(user_obj)
     db.commit()

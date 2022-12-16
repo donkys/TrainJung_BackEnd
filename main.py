@@ -16,7 +16,7 @@ app = _fastapi.FastAPI(
     root_path="/"
   )
 
-
+_services.create_database()
 
 @app.post("/api/users")
 async def create_user(
@@ -44,7 +44,6 @@ async def generate_token(
             status_code=401, detail="Invalid Credentials")
 
     return await _services.create_token(user)
-
 
 @app.get("/api/users/me", response_model=_schemas.User)
 async def get_user(user: _schemas.User = _fastapi.Depends(_services.get_current_user)):
@@ -75,4 +74,3 @@ async def getTableTrainBy(trainID: int):
     return railway._getTableTrainByID(trainID) 
 
 logger = logging.getLogger("uvicorn.error")
-print(logger)

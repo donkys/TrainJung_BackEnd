@@ -108,7 +108,7 @@ def _getTrain():
 
     addTrain = []
     for row in cursor:
-        addTrain.append({row[0] : row[1], "Time" : row[2:len(row)]})
+        addTrain.append({"id" : row[0], "name":row[1], "Time" : row[2:len(row)]})
     
     return addTrain
 
@@ -144,11 +144,11 @@ def _getStationAtoB(idA : int, idB : int):
         count = 0
         
         for row in cursor:
-            addTrain.append({count+idA : row[0]}) 
+            addTrain.append({"id" : count + idA, "time" : row[0]}) 
             count+=1
-            
-        if addTrain[0][idA] != '':            
-            if  addTrain[len(addTrain)-1][idB] != '':
+
+        if addTrain[0]['time'] != '':    
+            if  addTrain[len(addTrain)-1]["time"] != '':
                 train.append({"number":t, "Time" : addTrain})
                 
     return train
@@ -179,7 +179,7 @@ def _getTableTrainByID(numberTrain:int, ):
 
     for row in cursor:
         e = datetime.strptime(row[2], "%H:%M") - relativedelta(seconds=1)
-        addTrain.append({int(row[0]) : row[1],"Arr" : e.strftime("%H:%M"), "Dep":row[2]})
+        addTrain.append({"id":int(row[0]), "name":row[1], "Arr" : e.strftime("%H:%M"), "Dep":row[2]})
     
     return addTrain
 
@@ -188,3 +188,4 @@ def _getTableTrainByID(numberTrain:int, ):
 # __createTable("StationOUT")
 # _dataInsertOUT()
 # __conn.close()
+
