@@ -128,7 +128,7 @@ def _getTrainByID(numberTrain):
     cursor = __conn.execute('''SELECT id, station_name, Train_''' + str(numberTrain) + ''' FROM StationOUT WHERE Train_''' + str(numberTrain) + ''' != "" ''')
     addTrain = []
     for row in cursor:
-        addTrain.append({row[0] : row[1],"Time" : row[2]})
+        addTrain.append({"id":row[0], "name": row[1], "time" : row[2]})
     
     return addTrain
 
