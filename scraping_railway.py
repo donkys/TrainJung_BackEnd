@@ -182,7 +182,38 @@ def _getTableTrainByID(numberTrain:int, ):
     
     return addTrain
 
+def _getInfoStation(id: int):
+    cursor = __conn.execute('''SELECT id, station_name FROM StationOUT WHERE ''' + str(id) + ''' == id ''')
+    string = []
+    for row in cursor:
+        row = list(row)
+        string.append({"id" : str(row[0]) , "name" : str(row[1])})
 
+    return string
+
+def _updatetime(idStation: int, numberTrain: int, time: str):
+    # print("UPDATE StationOUT SET Train_" + str(numberTrain) + " = \"" + time +"\" WHERE id == "+ str(idStation))
+    try:
+        __conn.execute("UPDATE StationOUT SET Train_" + str(numberTrain) + " = \"" + time +"\" WHERE id == "+ str(idStation))
+        __conn.commit()
+    except sqlite3.Error as error:
+        return {"id":"-1", "err": error}
+        
+    return {"id":0, "message":"Update "+ str(idStation) + ", Train_" + str(numberTrain) +" to " + str(time)+" Success"}
+
+def _addStatus(idStation: int,trainNumber:int , onTime: bool, message: str):
+    status = ""
+    if onTime:
+        status = "On Time"
+    else: status = "Delays"
+        
+    return {"idStation":idStation, "Train":trainNumber, "Status":status, "Problem":message}
+
+def _pushNotify(idStation: int, numberTrain: int, time: str, topic:str, message:str):
+    #push notify function
+    print("Notification : " + Station + " Train No." + numberTrain + " Change to " + numberTrain)
+
+    return {"topic":topic + "[" + str(idStation) + "" + str(numberTrain) + "" + str(time) + "]", "Message":message}
 
 # __createTable("StationOUT")
 # _dataInsertOUT()

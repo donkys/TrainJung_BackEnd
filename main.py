@@ -45,9 +45,25 @@ async def generate_token(
 
     return await _services.create_token(user)
 
+@app.get("/Station")
+async def getMyStation(user: _schemas.User = _fastapi.Depends(_services.get_current_user)):
+    return railway._getInfoStation(user.idStation)
+
+@app.post("/updateTime")
+async def updateTime(idStation: int,numberTrain: int, time: str, user: _schemas.User = _fastapi.Depends(_services.get_current_user)):
+    if idStation != user.idStation:
+        raise _fastapi.HTTPException(
+            status_code=400, detail="not permission")
+
+    return railway._updatetime(idStation,numberTrain, time)
+
 @app.get("/api/users/me", response_model=_schemas.User)
 async def get_user(user: _schemas.User = _fastapi.Depends(_services.get_current_user)):
     return user
+
+@app.post("/Status")
+async def addStatus(trainNumber: int, onTime: bool, message: str, user: _schemas.User = _fastapi.Depends(_services.get_current_user)):
+    return railway._addStatus(user.idStation, trainNumber, onTime , message)
 
 # get all train {number, name, time(array)}
 @app.get("/allTrainByStation")
@@ -76,6 +92,7 @@ async def getTableTrainBy(trainID: int):
 @app.get("/Table/{trainID}/{A}/{B}")
 async def getTableTrainBy(trainID: int, A:int, B:int):
     return railway._getTableTrainByIDAtoB(trainID, A, B) 
+
 
 
 logger = logging.getLogger("uvicorn.error")
