@@ -153,24 +153,23 @@ def _getStationAtoB(idA : int, idB : int):
                 
     return train
 
-def _getTableTrainByID(number : int, idA : int, idB : int):
-    number = _getNumberTrain()
+def _getTableTrainByIDAtoB(number : int, idA : int, idB : int):
     train = []
+    cursor = __conn.execute("SELECT Train_" + str(number) + " \
+        FROM StationOUT WHERE id >= "+str(idA)+" AND id <= "+ str(idB))
+    addTrain = []
+    count = 0
+    
+    for row in cursor:
+        addTrain.append({"id" : count + idA, "time" : row[0]}) 
+        count+=1
 
-    for t in number:
-        cursor = __conn.execute("SELECT Train_" + str(t) + " \
-            FROM StationOUT WHERE id >= "+str(idA)+" AND id <= "+ str(idB))
-        addTrain = []
-        count = 0
-        
-        for row in cursor:
-            addTrain.append({count+idA : row[0]}) 
-            count+=1
-            
-        if addTrain[0][idA] != '':            
-            if  addTrain[len(addTrain)-1][idB] != '':
-                train.append({"number":t, "Time" : addTrain})
-                
+    if addTrain[0]['time'] != '':    
+        if  addTrain[len(addTrain)-1]["time"] != '':
+                train.append({"number":number, "Time" : addTrain})
+        else: return {"id":-1, "err":"dont't have time destination Train"}
+    else: return {"id":-1, "err":"dont't have time Start Train"}
+
     return train
 
 def _getTableTrainByID(numberTrain:int, ):

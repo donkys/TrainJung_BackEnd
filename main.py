@@ -73,4 +73,9 @@ async def train(trainID: int):
 async def getTableTrainBy(trainID: int):
     return railway._getTableTrainByID(trainID) 
 
+@app.get("/Table/{trainID}/{A}/{B}")
+async def getTableTrainBy(trainID: int, A:int, B:int):
+    return railway._getTableTrainByIDAtoB(trainID, A, B) 
+
+
 logger = logging.getLogger("uvicorn.error")
