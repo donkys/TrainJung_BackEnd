@@ -95,4 +95,8 @@ async def getTableTrainBy(trainID: int, A:int, B:int):
 async def getHome():
     return railway._home() 
 
+@app.get("/NameOfTrain")
+async def getKeyTrain():
+    return railway._getNameTrain()
+
 logger = logging.getLogger("uvicorn.error")

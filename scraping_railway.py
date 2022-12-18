@@ -221,9 +221,14 @@ def _home():
         return data
     return {"id":-1, "err":"can't open file"}
 
+def _getNameTrain():
+    with open('./nameoftrain.json', encoding="utf8") as json_file:
+        data = json.load(json_file)
+        return data    
+    return {"id":-1, "err":"can't open file"}
 
 # __createTable("StationOUT")
 # _dataInsertOUT()
 # __conn.close()
 
-_home()
+# _home()
