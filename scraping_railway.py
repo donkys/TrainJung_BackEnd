@@ -8,6 +8,12 @@ import time
 import math
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from linebot import LineBotApi
+from linebot.models import TextSendMessage
+from linebot.exceptions import LineBotApiError
+
+line_bot_api = LineBotApi('NPsaa2HVsAgdPyNpJ9VApz8QIvPWyipteTJ0X6Jd9mD+1iPV7Vd50L06BzPDrQSdGTl3t3D/9QqV0QsVXCxDmvrCXW8dIKWyoe+ey5PZpPGSYJGEoGoeCEES1Ad2gOjTJ1DnNYRdmMPjmt/Wx4tFrgdB04t89/1O/w1cDnyilFU=')
+
 
 #create a data structure
 __conn = sqlite3.connect('./database/railwaythai.db')
@@ -191,6 +197,15 @@ def _getInfoStation(id: int):
 
     return string
 
+def _getInfoName(id: int):
+    cursor = __conn.execute('''SELECT id, station_name FROM StationOUT WHERE ''' + str(id) + ''' == id ''')
+    string = []
+    for row in cursor:
+        row = list(row)
+        string.append(str(row[1]))
+
+    return string[0]
+
 def _updatetime(idStation: int, numberTrain: int, time: str):
     # print("UPDATE StationOUT SET Train_" + str(numberTrain) + " = \"" + time +"\" WHERE id == "+ str(idStation))
     try:
@@ -198,14 +213,20 @@ def _updatetime(idStation: int, numberTrain: int, time: str):
         __conn.commit()
     except sqlite3.Error as error:
         return {"id":"-1", "err": error}
-        
+    
+    # message = "ตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + "\n ปรับเวลาเป็น : "+time + + _getInfoName(idStation)
+    _pushLineNotify(message)
+    
     return {"id":0, "message":"Update "+ str(idStation) + ", Train_" + str(numberTrain) +" to " + str(time)+" Success"}
 
-def _addStatus(idStation: int,trainNumber:int , onTime: bool, message: str):
+def _addStatus(idStation: int,trainNumber:int , onTime: bool, ms: str):
     status = ""
+    message = ""
     if onTime:
-        status = "On Time"
-    else: status = "Delays"
+        message = "ตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " \nมีสถานะ : On Time\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)
+    else: 
+        message = "ตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " มีสถานะ : Delay\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)  
+    _pushLineNotify(message)
         
     return {"idStation":idStation, "Train":trainNumber, "Status":status, "Problem":message}
 
@@ -214,6 +235,12 @@ def _pushNotify(idStation: int, numberTrain: int, time: str, topic:str, message:
     print("Notification : " + Station + " Train No." + numberTrain + " Change to " + numberTrain)
 
     return {"topic":topic + "[" + str(idStation) + "" + str(numberTrain) + "" + str(time) + "]", "Message":message}
+
+def _pushLineNotify(str):
+    try:
+        line_bot_api.push_message('Udf4ee11552c59cd4a32cbc311fd0d744', TextSendMessage(text=str))
+    except LineBotApiError as e:
+        print(e)
 
 def _home():
     with open('./Home.json', encoding="utf8") as json_file:
