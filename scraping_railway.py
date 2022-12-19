@@ -227,6 +227,7 @@ def _getNameTrain():
         return data    
     return {"id":-1, "err":"can't open file"}
 
+# print(_getNameTrain())
 # __createTable("StationOUT")
 # _dataInsertOUT()
 # __conn.close()
