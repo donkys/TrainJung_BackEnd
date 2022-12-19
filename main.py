@@ -99,6 +99,9 @@ async def getHome():
 async def getKeyTrain():
     return railway._getNameTrain()
 
+@app.get("/NameOfTrain2")
+async def getKeyTrain2():
+    return railway._getNameTrain2()
 
 
 logger = logging.getLogger("uvicorn.error")

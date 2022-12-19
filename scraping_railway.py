@@ -214,13 +214,12 @@ def _updatetime(idStation: int, numberTrain: int, time: str):
     except sqlite3.Error as error:
         return {"id":"-1", "err": error}
     
-    # message = "ตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + "\n ปรับเวลาเป็น : "+time + + _getInfoName(idStation)
+    message = "ตอนนี้รถไฟ หมายเลข :"+str (numberTrain) + "\nปรับเวลาเป็น : "+ time + "\nแจ้งจากสถานี : "+ _getInfoName(idStation)
     _pushLineNotify(message)
     
     return {"id":0, "message":"Update "+ str(idStation) + ", Train_" + str(numberTrain) +" to " + str(time)+" Success"}
 
-def _addStatus(idStation: int,trainNumber:int , onTime: bool, ms: str):
-    status = ""
+def _addStatus(idStation: int, trainNumber:int , onTime: bool, ms: str):
     message = ""
     if onTime:
         message = "ตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " \nมีสถานะ : On Time\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)
@@ -228,11 +227,11 @@ def _addStatus(idStation: int,trainNumber:int , onTime: bool, ms: str):
         message = "ตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " มีสถานะ : Delay\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)  
     _pushLineNotify(message)
         
-    return {"idStation":idStation, "Train":trainNumber, "Status":status, "Problem":message}
+    return {"idStation":idStation, "Train":trainNumber, "Status":onTime, "Problem":message}
 
 def _pushNotify(idStation: int, numberTrain: int, time: str, topic:str, message:str):
     #push notify function
-    print("Notification : " + Station + " Train No." + numberTrain + " Change to " + numberTrain)
+    # ms = "Notification : " + _getInfoName(idStation) + " \nTrain No." + str(numberTrain) + " Change to -> " + str(numberTrain)
 
     return {"topic":topic + "[" + str(idStation) + "" + str(numberTrain) + "" + str(time) + "]", "Message":message}
 
@@ -250,6 +249,12 @@ def _home():
 
 def _getNameTrain():
     with open('./nameoftrain.json', encoding="utf8") as json_file:
+        data = json.load(json_file)
+        return data    
+    return {"id":-1, "err":"can't open file"}
+
+def _getNameTrain2():
+    with open('./nameofTrain2.json', encoding="utf8") as json_file:
         data = json.load(json_file)
         return data    
     return {"id":-1, "err":"can't open file"}
