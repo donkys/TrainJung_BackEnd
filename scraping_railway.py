@@ -224,11 +224,8 @@ def _updatetime(idStation: int, numberTrain: int, time: str):
     return {"id":0, "message":"Update "+ str(idStation) + ", Train_" + str(numberTrain) +" to " + str(time)+" Success"}
 
 def _addStatus(idStation: int, trainNumber:int , onTime: bool, ms: str):
-    message = ""
-    if onTime:
-        message = "\nตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " \nมีสถานะ : On Time\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)
-    else: 
-        message = "\nตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " \nมีสถานะ : Delay\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)  
+    message = "\nตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + "\nมีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)
+        # message = "\nตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " \nมีสถานะ : Delay\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)  
     # _pushLineNotify(message)
     requests.post(url, headers=headers, data = {'message':message})
     return {"idStation":idStation, "Train":trainNumber, "Status":onTime, "Problem":message}
