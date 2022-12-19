@@ -12,6 +12,10 @@ from linebot import LineBotApi
 from linebot.models import TextSendMessage
 from linebot.exceptions import LineBotApiError
 
+url = 'https://notify-api.line.me/api/notify'
+token = 'hgmSd3VwiRWdyefYagY9ebbGdycL3noF2W2L1zJSZRj'
+headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
+
 line_bot_api = LineBotApi('NPsaa2HVsAgdPyNpJ9VApz8QIvPWyipteTJ0X6Jd9mD+1iPV7Vd50L06BzPDrQSdGTl3t3D/9QqV0QsVXCxDmvrCXW8dIKWyoe+ey5PZpPGSYJGEoGoeCEES1Ad2gOjTJ1DnNYRdmMPjmt/Wx4tFrgdB04t89/1O/w1cDnyilFU=')
 
 
@@ -222,11 +226,11 @@ def _updatetime(idStation: int, numberTrain: int, time: str):
 def _addStatus(idStation: int, trainNumber:int , onTime: bool, ms: str):
     message = ""
     if onTime:
-        message = "ตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " \nมีสถานะ : On Time\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)
+        message = "\nตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " \nมีสถานะ : On Time\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)
     else: 
-        message = "ตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " มีสถานะ : Delay\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)  
-    _pushLineNotify(message)
-        
+        message = "\nตอนนี้รถไฟ หมายเลข :"+str(trainNumber) + " \nมีสถานะ : Delay\n" + "มีรายละเอียด : " + ms + "\nแจ้งจากสถานี : " + _getInfoName(idStation)  
+    # _pushLineNotify(message)
+    requests.post(url, headers=headers, data = {'message':message})
     return {"idStation":idStation, "Train":trainNumber, "Status":onTime, "Problem":message}
 
 def _pushNotify(idStation: int, numberTrain: int, time: str, topic:str, message:str):
@@ -237,7 +241,9 @@ def _pushNotify(idStation: int, numberTrain: int, time: str, topic:str, message:
 
 def _pushLineNotify(str):
     try:
-        line_bot_api.push_message('Udf4ee11552c59cd4a32cbc311fd0d744', TextSendMessage(text=str))
+        line_bot_api.push_message('1657748591', TextSendMessage(text=str))
+        r = requests.post(url, headers=headers, data = {'message':str})
+        print(r)
     except LineBotApiError as e:
         print(e)
 
