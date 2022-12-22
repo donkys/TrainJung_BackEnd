@@ -103,5 +103,21 @@ async def getKeyTrain():
 async def getKeyTrain2():
     return railway._getNameTrain2()
 
+@app.get("/BookmarkALL")
+async def bookmarkAll():
+    return railway._bookmarkAll()
+
+@app.get("/BookmarkAdd/{id}")
+async def bookmarkAdd(id:int):
+    return railway.__insertBookmark(id)
+
+@app.get("/BookmarkDelete/{id}")
+async def bookmarkDelete(id:int):
+    return railway.__deleteBookmark(id)
+
+@app.get("/Bookmark")
+async def bookmark():
+    return railway.__getBookmark()
+
 
 logger = logging.getLogger("uvicorn.error")

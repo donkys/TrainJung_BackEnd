@@ -4,8 +4,8 @@ import requests
 import json
 import os
 import time
-
 import math
+
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from linebot import LineBotApi
@@ -219,7 +219,8 @@ def _updatetime(idStation: int, numberTrain: int, time: str):
         return {"id":"-1", "err": error}
     
     message = "ตอนนี้รถไฟ หมายเลข :"+str (numberTrain) + "\nปรับเวลาเป็น : "+ time + "\nแจ้งจากสถานี : "+ _getInfoName(idStation)
-    _pushLineNotify(message)
+    # _pushLineNotify(message)
+    requests.post(url, headers=headers, data = {'message':message})
     
     return {"id":0, "message":"Update "+ str(idStation) + ", Train_" + str(numberTrain) +" to " + str(time)+" Success"}
 
@@ -258,6 +259,46 @@ def _getNameTrain():
 
 def _getNameTrain2():
     with open('./nameofTrain2.json', encoding="utf8") as json_file:
+        data = json.load(json_file)
+        return data    
+    return {"id":-1, "err":"can't open file"}
+
+#------------------------------------------------------------------------------------
+def __insertBookmark(id:int):
+    f = open('AllTrain.json', "r", encoding="utf8")
+    data = json.loads(f.read())
+    conn = sqlite3.connect('./database/AllTrain.db')
+    c = conn.cursor()
+    for i in data:
+        if i['id'] == id:
+            value = str(id) + ', ' + str(i['number']) + ', \'' + i['name'] + '\', \'' + i['time'] + '\', \'' + i['nameDes'] + '\', \'' + i['timeDes'] +'\''
+            c.execute('INSERT INTO trainTo VALUES('+value+')')
+            conn.commit()
+            print('insert: ',i['id'])
+            c.close()
+    f.close()
+    return __getBookmark()
+
+def __deleteBookmark(id:int):
+    conn = sqlite3.connect('./database/AllTrain.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM trainTo WHERE t_id = ' + str(id))
+    conn.commit()
+    c.close()
+    return __getBookmark()
+
+def __getBookmark():
+    conn = sqlite3.connect('./database/AllTrain.db')
+    c = conn.cursor()
+    cursor = c.execute('SELECT * FROM trainTo')
+    bookmark = []
+    for row in cursor:
+        bookmark.append({"id":row[0], "number": row[1], "name" : row[2], "time" : row[3], "nameDes" : row[4], "timeDes" : row[5]})
+
+    return bookmark
+
+def _bookmarkAll():
+    with open('./AllTrain.json', encoding="utf8") as json_file:
         data = json.load(json_file)
         return data    
     return {"id":-1, "err":"can't open file"}
