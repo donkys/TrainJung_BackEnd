@@ -3,7 +3,6 @@ import fastapi as _fastapi
 import fastapi.security as _security
 import uvicorn
 import logging
-import time
 
 import sqlalchemy.orm as _orm
 import scraping_railway as railway
@@ -118,7 +117,6 @@ async def bookmarkDelete(id:int):
 
 @app.get("/Bookmark")
 async def bookmark():
-    time.sleep(0.5)
     return railway.__getBookmark()
 
 

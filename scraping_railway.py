@@ -283,7 +283,10 @@ def __deleteBookmark(id:int):
     conn = sqlite3.connect('./database/AllTrain.db')
     c = conn.cursor()
     c.execute('DELETE FROM trainTo WHERE t_id = ' + str(id))
+    time.sleep(0.5)
     conn.commit()
+    print('delete :',id)
+
     c.close()
     return __getBookmark()
 
@@ -291,10 +294,11 @@ def __getBookmark():
     conn = sqlite3.connect('./database/AllTrain.db')
     c = conn.cursor()
     cursor = c.execute('SELECT * FROM trainTo')
+    time.sleep(0.5)
     bookmark = []
     for row in cursor:
         bookmark.append({"id":row[0], "number": row[1], "name" : row[2], "time" : row[3], "nameDes" : row[4], "timeDes" : row[5]})
-
+    c.close()
     return bookmark
 
 def _bookmarkAll():
